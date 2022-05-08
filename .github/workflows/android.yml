@@ -13,6 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: download dolphin-emu
+      run: git clone --recurse-submodules https://github.com/dolphin-emu/dolphin
+
     - name: set up JDK 11
       uses: actions/setup-java@v3
       with:
@@ -20,13 +24,13 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: download dolphin-emu
-      run: git clone --recurse-submodules https://github.com/dolphin-emu/dolphin
     - name: Grant execute permission for gradlew
-      run: chmod +x dolphin/Source/Android/gradlew
+      run: chmod +x dolphin/Source/Android/gradle
+
     - name: re-add armeabi-v7a x86
       run: |
-       sed -i 's/abiFilters "arm64-v8a", "x86_64" //, "armeabi-v7a", "x86"/abiFilters "arm64-v8a", "x86_64", "armeabi-v7a", "x86"/g' dolphin/Source/Android/app/build.gradle    
+       sed -i 's/abiFilters "arm64-v8a", "x86_64" //, "armeabi-v7a", "x86"/abiFilters "arm64-v8a", "x86_64", "armeabi-v7a", "x86"/g' dolphin/Source/Android/app/build.gradle
+   
     - name: Build with Gradle
       run: |
        cd dolphin/Source/Android/app
